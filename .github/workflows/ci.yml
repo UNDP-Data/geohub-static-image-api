@@ -56,7 +56,7 @@ jobs:
           /usr/sbin/update-ccache-symlinks
 
       - name: install dependencies
-        run: npm ci --ignore-scripts
+        run: npm ci
 
       - name: build
         run: npm run build

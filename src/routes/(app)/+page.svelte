@@ -161,6 +161,7 @@
 <p class="title is-2">GeoHub Static Image API Playground</p>
 
 <div class="field">
+	<!-- svelte-ignore a11y-label-has-associated-control -->
 	<label class="label">Maplibre Style URL</label>
 	<div class="control is-flex">
 		<input class="input" type="text" placeholder="Type Maplibre Style URL" bind:value={styleUrl} />
@@ -171,7 +172,7 @@
 <hr />
 
 <div class="columns is-mobile">
-	<div class="column is-4 is-flex is-flex-direction-column">
+	<div class="column is-3 is-flex is-flex-direction-column">
 		<div class="is-flex">
 			<div class="field m-1">
 				<!-- svelte-ignore a11y-label-has-associated-control -->

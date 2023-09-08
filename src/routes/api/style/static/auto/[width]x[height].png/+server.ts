@@ -4,7 +4,6 @@ import { renderMap } from '$lib/server/renderMap';
 import type { StyleSpecification } from 'maplibre-gl';
 
 export const GET: RequestHandler = async ({ params, url }) => {
-	const id = Number(params.id);
 	const width = Number(params.width);
 	const height = Number(params.height);
 	const ratio = 1;

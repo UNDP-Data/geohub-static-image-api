@@ -16,7 +16,7 @@
 	let styleUrl: string = $page.url.searchParams.get('url') as string;
 
 	let origin = $page.url.origin;
-	let apiUrl = `${origin}/api/style/static/{lon},{lat},{zoom},{bearing},{pitch}|{auto}|{bbox}/{width}x{height}.png?url=${styleUrl}`;
+	let apiUrl = `${origin}/style/static/{lon},{lat},{zoom},{bearing},{pitch}|{auto}|{bbox}/{width}x{height}.png?url=${styleUrl}`;
 
 	let width = 300;
 	let height = 200;
@@ -125,9 +125,7 @@
 	};
 
 	const computeBoundsFromCenter = async () => {
-		const res = await fetch(
-			`${origin}/api/bounds/${longitude},${latitude},${zoom}/${width}x${height}`
-		);
+		const res = await fetch(`${origin}/bounds/${longitude},${latitude},${zoom}/${width}x${height}`);
 		const json = await res.json();
 		return json.bounds;
 	};
@@ -135,11 +133,9 @@
 	$: activeTab, updateApiUrl();
 	const updateApiUrl = () => {
 		if (activeTab === 'center') {
-			apiUrl = `${origin}/api/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.png?url=${styleUrl}`;
+			apiUrl = `${origin}/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.png?url=${styleUrl}`;
 		} else if (activeTab === 'bbox') {
-			apiUrl = `${origin}/api/style/static/${bbox.join(
-				','
-			)}/${width}x${height}.png?url=${styleUrl}`;
+			apiUrl = `${origin}/style/static/${bbox.join(',')}/${width}x${height}.png?url=${styleUrl}`;
 		} else {
 			if (styleJSON.center) {
 				longitude = styleJSON.center[0];
@@ -157,7 +153,7 @@
 			map.setBearing(bearing);
 			map.setPitch(bearing);
 
-			apiUrl = `${origin}/api/style/static/auto/${width}x${height}.png?url=${styleUrl}`;
+			apiUrl = `${origin}/style/static/auto/${width}x${height}.png?url=${styleUrl}`;
 		}
 	};
 </script>

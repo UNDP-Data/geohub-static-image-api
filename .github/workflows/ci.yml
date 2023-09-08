@@ -34,6 +34,9 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: install swa-cli
+        run: npm i -g @azure/static-web-apps-cli
+
       - name: install dependencies for maplibre-gl-native
         env:
           DEBIAN_FRONTEND: noninteractive
@@ -62,8 +65,14 @@ jobs:
       - name: build
         run: npm run build
 
+      - name: build only for dependencies
+        run: |
+          rm -rf node_modules
+          npm install --omit=dev
+          mv node_modules/ ./build/server/sk_render
+
       - name: deploy
         if: ${{ github.ref == 'refs/heads/main'}}
         working-directory: ./build
         run: |
-          npx swa deploy ./static --api-location ./server --app-name ${{env.SWA_APP_NAME}} --deployment-token ${{env.AZURE_STATIC_WEB_APP_API_TOKEN}}
+          swa deploy ./static --api-location ./server --app-name ${{env.SWA_APP_NAME}} --deployment-token ${{env.AZURE_STATIC_WEB_APP_API_TOKEN}}

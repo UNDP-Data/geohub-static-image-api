@@ -13,6 +13,7 @@ on:
 env:
   CI: true
   AZURE_STATIC_WEB_APP_API_TOKEN: ${{ secrets.AZURE_STATIC_WEB_APP_API_TOKEN }}
+  SWA_APP_NAME: maplibre-static-image-api
 
 jobs:
   build_and_deploy_job:
@@ -64,4 +65,4 @@ jobs:
       - name: deploy
         if: ${{ github.ref == 'refs/heads/main'}}
         run: |
-          npm run swa:deploy --deployment-token {{env.AZURE_STATIC_WEB_APP_API_TOKEN}}
+          swa deploy ./build --api-location ./build/server --app-name {{env.SWA_APP_NAME}} --deployment-token {{env.AZURE_STATIC_WEB_APP_API_TOKEN}}

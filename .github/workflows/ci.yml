@@ -17,7 +17,7 @@ env:
 jobs:
   build_and_deploy_job:
     name: Build and deploy Azure Static Web App
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [18]
@@ -39,22 +39,24 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y \
-            build-essential \
             ccache \
+            cmake \
+            ninja-build \
+            pkg-config \
+            xvfb \
             libcurl4-openssl-dev \
             libglfw3-dev \
             libuv1-dev \
-            libicu-dev \
+            g++-10 \
+            libc++-9-dev \
+            libc++abi-9-dev \
             libjpeg-dev \
             libpng-dev \
             libwebp-dev
-          update-ccache-symlinks
-
-          wget http://security.ubuntu.com/ubuntu/pool/main/i/icu/libicu60_60.2-3ubuntu3.2_amd64.deb
-          sudo apt-get install ./libicu60_60.2-3ubuntu3.2_amd64.deb
+          /usr/sbin/update-ccache-symlinks
 
       - name: install dependencies
-        run: npm ci
+        run: npm ci --ignore-scripts
 
       - name: build
         run: npm run build

@@ -1,4 +1,6 @@
 <div class="p-4">
+	<p class="title is-2">GeoHub Static Image API Playground</p>
+
 	<slot />
 </div>
 

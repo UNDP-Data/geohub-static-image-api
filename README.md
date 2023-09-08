@@ -3,8 +3,8 @@
 ## Run locally by swa CLI
 
 ```shell
-pnpm build
-pnpm swa:start
+npm run build
+npm run swa:start
 ```
 
 see [here](https://github.com/geoffrich/svelte-adapter-azure-swa#running-locally-with-the-azure-swa-cli) more details about static web app adapter.
@@ -12,7 +12,7 @@ see [here](https://github.com/geoffrich/svelte-adapter-azure-swa#running-locally
 ## Run locally by vite
 
 ```shell
-pnpm dev
+npm run dev
 ```
 
 ## create-svelte

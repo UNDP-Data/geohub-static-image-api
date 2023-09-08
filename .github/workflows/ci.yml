@@ -75,4 +75,4 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main'}}
         working-directory: ./build
         run: |
-          swa deploy ./static --api-location ./server --app-name ${{env.SWA_APP_NAME}} --deployment-token ${{env.AZURE_STATIC_WEB_APP_API_TOKEN}}
+          swa deploy ./static --api-location ./server --app-name ${{env.SWA_APP_NAME}} --deployment-token ${{env.AZURE_STATIC_WEB_APP_API_TOKEN}} --env production

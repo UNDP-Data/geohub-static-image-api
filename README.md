@@ -15,6 +15,12 @@ see [here](https://github.com/geoffrich/svelte-adapter-azure-swa#running-locally
 npm run dev
 ```
 
+## Deploy
+
+```shell
+npm run swa:deploy
+```
+
 ## create-svelte
 
 Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).

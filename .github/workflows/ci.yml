@@ -68,6 +68,7 @@ jobs:
           rm -rf node_modules
           npm install --omit=dev
           mv node_modules/ ./build/.
+          mv package.json ./build/package.json
 
       - name: 'Deploy to Azure Web App for undpgeohub-static-image-api'
         if: ${{ github.ref == 'refs/heads/main'}}

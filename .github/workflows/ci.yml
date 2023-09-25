@@ -15,7 +15,7 @@ env:
 
 jobs:
   build_and_deploy_job:
-    name: Build and deploy Azure Static Web App
+    name: Build and deploy Azure Web App
     runs-on: ubuntu-20.04
     strategy:
       matrix:

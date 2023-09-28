@@ -8,7 +8,7 @@ RUN apt update
 
 # https://github.com/maplibre/maplibre-native/tree/main/platform/linux#prerequisites
 RUN apt install -y g++ git cmake ccache ninja-build pkg-config
-RUN apt install -y libcurl4-openssl-dev libglfw3-dev libuv1-dev libpng-dev libicu-dev libjpeg62-turbo libwebp-dev
+RUN apt install -y libcurl4-openssl-dev libglfw3-dev libuv1-dev libpng-dev libicu-dev libjpeg-dev libjpeg62-turbo libwebp-dev
 
 WORKDIR /app
 RUN npm install -g npm

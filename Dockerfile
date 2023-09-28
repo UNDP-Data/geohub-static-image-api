@@ -18,7 +18,7 @@ RUN npm install -g npm
 
 COPY ./build .
 
-EXPOSE 3000
+EXPOSE 8080
 CMD ["node", "index.js"]
 
 # RUN npm run build

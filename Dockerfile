@@ -1,17 +1,17 @@
 # NodeJS 18 setup modified from standard NodeJS bullseye-slim installation
 # borrow Dockerfile from https://github.com/consbio/mbgl-renderer/blob/main/docker/Dockerfile
 
-FROM node:18 as build
+FROM keymetrics/pm2:18-slim
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN apt update
+# RUN apt update
 
-# https://github.com/maplibre/maplibre-native/tree/main/platform/linux#prerequisites
-RUN apt install -y g++ git cmake ccache ninja-build pkg-config
-RUN apt install -y libcurl4-openssl-dev libglfw3-dev libuv1-dev libpng-dev libicu-dev libjpeg-dev libjpeg62-turbo libwebp-dev
+# # https://github.com/maplibre/maplibre-native/tree/main/platform/linux#prerequisites
+# RUN apt install -y g++ git cmake ccache ninja-build pkg-config
+# RUN apt install -y libcurl4-openssl-dev libglfw3-dev libuv1-dev libpng-dev libicu-dev libjpeg-dev libjpeg62-turbo libwebp-dev
 
 WORKDIR /app
-RUN npm install -g npm
+# RUN npm install -g npm
 # COPY package*.json /app/
 
 # RUN npm ci
@@ -19,7 +19,10 @@ RUN npm install -g npm
 COPY ./build .
 
 EXPOSE 3000
-CMD ["node", "index.js"]
+
+# rum pm2 cluster with maximum 4 instances
+# https://pm2.keymetrics.io/docs/usage/docker-pm2-nodejs/#pm2-runtime-helper
+CMD ["pm2-runtime", "index.js", "-i", "4"]
 
 # production image
 # FROM keymetrics/pm2:18-slim

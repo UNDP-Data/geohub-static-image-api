@@ -17,4 +17,4 @@ echo $IMAGE_NAME
 echo $PORT
 # echo $ENV_FILE
 
-docker run -it -p $PORT:3000 --env-file=$ENV_FILE $IMAGE_NAME
+docker run -it -p $PORT:3000 $IMAGE_NAME

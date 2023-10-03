@@ -330,7 +330,7 @@
 			top: 50%;
 			left: 50%;
 			transform: translate(-50%, -50%);
-			z-index: 99;
+			z-index: 10;
 			// background-color: rgba(255, 255, 255, 0.108);
 			box-shadow: 5px 10px 25px 5px rgba(0, 0, 0, 0.5);
 		}

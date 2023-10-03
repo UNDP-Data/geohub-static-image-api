@@ -1,5 +1,5 @@
 #!/bin/sh
-xvfb-run -a --server-args="-screen 0 1024x768x24" -- node /app/index.js
+xvfb-run -a --server-args="-screen 0 1024x768x24" -- pm2 start /app/index.js -i 4
 
 # Start Xvfb
 # echo "Starting Xvfb"

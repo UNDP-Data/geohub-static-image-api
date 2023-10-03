@@ -12,7 +12,7 @@ xvfb-run -a --server-args="-screen 0 1024x768x24"
 echo "Xvfb is running"
 
 echo "Starting mbgl-renderer server"
-pm2 start index.js -i 4 &
+NODE_PORT=80 pm2 start index.js -i 4 &
 echo "Hit Ctrl-C to exit"
 
 trap "echo 'Stopping'; kill -s TERM $Xvfb_pid" INT TERM

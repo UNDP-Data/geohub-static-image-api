@@ -4,13 +4,6 @@
 FROM node:18 as build
 ENV DEBIAN_FRONTEND noninteractive
 
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
-  && case "${dpkgArch##*-}" in \
-  amd64) ARCH='x64';; \
-  arm64) ARCH='arm64';; \
-  *) echo "unsupported architecture"; exit 1 ;; \
-  esac
-
 # https://github.com/maplibre/maplibre-native/tree/main/platform/linux#prerequisites
 RUN apt-get update
 RUN apt-get install -y \
@@ -32,16 +25,12 @@ RUN apt-get install -y \
     xvfb \
     x11-utils
 
-RUN dpkgArch="$(dpkg --print-architecture)"
-RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.debian
+RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_amd64.debian
 RUN apt install ./multiarch-support_2.28-10_$dpkgArch.deb 
-RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20141009T042436Z/pool/main/libj/libjpeg8/libjpeg8_8d1-2_$dpkgArch.deb
-RUN apt install ./libjpeg8_8d1-2_$dpkgArch.deb
-RUN if [ "$dpkgArch" = "arm64" ] ; then \
-  wget --no-verbose http://ports.ubuntu.com/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_arm64.deb ; else \
-  wget --no-verbose http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_amd64.deb ;\
-  fi
-RUN apt install ./libicu66_66.1-2ubuntu2.1_$dpkgArch.deb && \
+RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20141009T042436Z/pool/main/libj/libjpeg8/libjpeg8_8d1-2_amd64.deb
+RUN apt install ./libjpeg8_8d1-2_amd64.deb
+RUN wget --no-verbose http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_amd64.deb
+RUN apt install ./libicu66_66.1-2ubuntu2.1_amd64.deb && \
 RUN rm -rf *.deb
 
 WORKDIR /app

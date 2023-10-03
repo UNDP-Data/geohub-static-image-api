@@ -26,25 +26,18 @@ RUN apt-get install -y \
     x11-utils \
     wget
 
-RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
-  && case "${dpkgArch##*-}" in \
-  amd64) ARCH='x64';; \
-  arm64) ARCH='arm64';; \
-  *) echo "unsupported architecture"; exit 1 ;; \
-  esac
-RUN dpkgArch="$(dpkg --print-architecture)"
-RUN echo $dpkgArch
-RUN echo "http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.deb"
-RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.deb
-RUN apt install ./multiarch-support_2.28-10_$dpkgArch.deb 
-RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20141009T042436Z/pool/main/libj/libjpeg8/libjpeg8_8d1-2_$dpkgArch.deb
-RUN apt install ./libjpeg8_8d1-2_$dpkgArch.deb
-RUN if [ "$dpkgArch" = "arm64" ] ; then \
-    wget --no-verbose http://ports.ubuntu.com/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_arm64.deb ; else \
-    wget --no-verbose http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_amd64.deb ;\
-    fi && \
-    apt install ./libicu66_66.1-2ubuntu2.1_$dpkgArch.deb
-RUN rm -rf *.deb
+RUN dpkgArch="$(dpkg --print-architecture)" && \
+  # install deps required by maplibre-gl-native but not available on bullseye
+  wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.deb && \
+  apt install ./multiarch-support_2.28-10_$dpkgArch.deb && \
+  wget --no-verbose http://snapshot.debian.org/archive/debian/20141009T042436Z/pool/main/libj/libjpeg8/libjpeg8_8d1-2_$dpkgArch.deb && \
+  apt install ./libjpeg8_8d1-2_$dpkgArch.deb && \
+  if [ "$dpkgArch" = "arm64" ] ; then \
+  wget --no-verbose http://ports.ubuntu.com/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_arm64.deb ; else \
+  wget --no-verbose http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_amd64.deb ;\
+  fi && \
+  apt install ./libicu66_66.1-2ubuntu2.1_$dpkgArch.deb && \
+  rm -rf *.deb
 
 WORKDIR /app
 

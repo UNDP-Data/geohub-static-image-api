@@ -4,6 +4,13 @@
 FROM node:18 as build
 ENV DEBIAN_FRONTEND noninteractive
 
+RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
+  && case "${dpkgArch##*-}" in \
+  amd64) ARCH='x64';; \
+  arm64) ARCH='arm64';; \
+  *) echo "unsupported architecture"; exit 1 ;; \
+  esac
+
 # https://github.com/maplibre/maplibre-native/tree/main/platform/linux#prerequisites
 RUN apt-get update
 RUN apt-get install -y \
@@ -24,6 +31,17 @@ RUN apt-get install -y \
     libgbm-dev  \
     xvfb \
     x11-utils
+
+RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.deb && \
+  apt install ./multiarch-support_2.28-10_$dpkgArch.deb && \
+  wget --no-verbose http://snapshot.debian.org/archive/debian/20141009T042436Z/pool/main/libj/libjpeg8/libjpeg8_8d1-2_$dpkgArch.deb && \
+  apt install ./libjpeg8_8d1-2_$dpkgArch.deb && \
+  if [ "$dpkgArch" = "arm64" ] ; then \
+  wget --no-verbose http://ports.ubuntu.com/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_arm64.deb ; else \
+  wget --no-verbose http://archive.ubuntu.com/ubuntu/pool/main/i/icu/libicu66_66.1-2ubuntu2.1_amd64.deb ;\
+  fi && \
+  apt install ./libicu66_66.1-2ubuntu2.1_$dpkgArch.deb && \
+  rm -rf *.deb
 
 WORKDIR /app
 

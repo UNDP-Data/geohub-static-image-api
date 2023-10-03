@@ -50,11 +50,11 @@
 	url="/"
 	logoUrl="/assets/undp-images/undp-logo-blue.svg"
 	bind:height={headerHeight}
-	isPositionFixed={false}
+	isPositionFixed={true}
 	bind:links
 />
 
-<div class="p-4">
+<div class="p-4" style="margin-top: {headerHeight}px">
 	<slot />
 </div>
 
@@ -62,4 +62,8 @@
 
 <style global lang="scss">
 	@import '@undp-data/undp-bulma/bulma.scss';
+
+	:global(.country-header) {
+		z-index: 99;
+	}
 </style>

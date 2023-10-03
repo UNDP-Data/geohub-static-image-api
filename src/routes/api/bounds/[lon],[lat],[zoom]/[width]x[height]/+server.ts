@@ -10,9 +10,5 @@ export const GET: RequestHandler = async ({ params }) => {
 
 	const bounds = geoViewport.bounds([lon, lat], zoom, [width, height]);
 
-	return new Response(JSON.stringify({ bounds }), {
-		headers: {
-			'Content-type': 'image/png'
-		}
-	});
+	return new Response(JSON.stringify({ bounds }));
 };

@@ -26,6 +26,7 @@
 	let zoom: number = 3;
 	let bearing: number = 0;
 	let pitch: number = 0;
+	let isRetina = false;
 
 	let mapContainer: HTMLDivElement;
 	let previewContainer: HTMLDivElement;
@@ -125,17 +126,23 @@
 	};
 
 	const computeBoundsFromCenter = async () => {
-		const res = await fetch(`${origin}/bounds/${longitude},${latitude},${zoom}/${width}x${height}`);
+		const res = await fetch(
+			`${origin}/api/bounds/${longitude},${latitude},${zoom}/${width}x${height}`
+		);
 		const json = await res.json();
 		return json.bounds;
 	};
 
 	$: activeTab, updateApiUrl();
+	$: isRetina, updateApiUrl();
 	const updateApiUrl = () => {
+		let retina = isRetina ? '@2x' : '';
 		if (activeTab === 'center') {
-			apiUrl = `${origin}/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.png?url=${styleUrl}`;
+			apiUrl = `${origin}/api/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.png${retina}?url=${styleUrl}`;
 		} else if (activeTab === 'bbox') {
-			apiUrl = `${origin}/style/static/${bbox.join(',')}/${width}x${height}.png?url=${styleUrl}`;
+			apiUrl = `${origin}/api/style/static/${bbox.join(
+				','
+			)}/${width}x${height}.png${retina}?url=${styleUrl}`;
 		} else {
 			if (styleJSON.center) {
 				longitude = styleJSON.center[0];
@@ -153,7 +160,7 @@
 			map.setBearing(bearing);
 			map.setPitch(bearing);
 
-			apiUrl = `${origin}/style/static/auto/${width}x${height}.png?url=${styleUrl}`;
+			apiUrl = `${origin}/api/style/static/auto/${width}x${height}.png${retina}?url=${styleUrl}`;
 		}
 	};
 </script>
@@ -290,6 +297,17 @@
 						</div>
 					</article>
 				{/if}
+
+				<div class="field">
+					<!-- svelte-ignore a11y-label-has-associated-control -->
+					<label class="label">High resolution</label>
+					<div class="control">
+						<label class="checkbox">
+							<input type="checkbox" bind:checked={isRetina} />
+							@2x
+						</label>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -322,7 +340,7 @@
 		.map {
 			position: relative;
 			width: 100%;
-			height: 500px;
+			height: 70vh;
 		}
 
 		.preview {

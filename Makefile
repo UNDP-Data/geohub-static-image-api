@@ -26,7 +26,6 @@ dev:
 	npm run dev
 
 dockerbuild:
-	./scripts/build.sh
 	./scripts/docker-build.sh
 
 dockerrun:

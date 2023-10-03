@@ -34,7 +34,11 @@ RUN npm ci
 
 COPY . /app/.
 
-RUN ./scripts/build.sh
+RUN npm run build
+RUN rm -rf node_modules
+RUN npm install --omit=dev
+RUN cp package.json build/.
+RUN mv node_modules build/.
 
 RUN cp entrypoint.sh ./build/.
 

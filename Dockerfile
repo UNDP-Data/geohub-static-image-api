@@ -1,7 +1,7 @@
 # NodeJS 18 setup modified from standard NodeJS bullseye-slim installation
 # borrow Dockerfile from https://github.com/consbio/mbgl-renderer/blob/main/docker/Dockerfile
-
-FROM node:18 as build
+# https://github.com/maplibre/maplibre-native/discussions/1091
+FROM --platform=linux/amd64 node:18-bullseye as build
 ENV DEBIAN_FRONTEND noninteractive
 
 # https://github.com/maplibre/maplibre-native/tree/main/platform/linux#prerequisites

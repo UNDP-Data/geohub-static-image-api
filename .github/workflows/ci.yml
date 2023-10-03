@@ -14,68 +14,42 @@ env:
   CI: true
 
 jobs:
-  build_and_deploy_job:
-    name: Build and deploy Azure Web App
+  build_docker:
+    name: Build and deploy Docker image
     runs-on: ubuntu-20.04
     strategy:
       matrix:
         node-version: [18]
-    environment:
-      name: 'Production'
-      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    env:
+      IMAGE_NAME: ${{ github.event.repository.name }}
 
     steps:
-      - name: checkout code repository
+      - name: Checkout
         uses: actions/checkout@v3
+
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: install swa-cli
-        run: npm i -g @azure/static-web-apps-cli
-
-      - name: install dependencies for maplibre-gl-native
-        env:
-          DEBIAN_FRONTEND: noninteractive
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            ccache \
-            cmake \
-            ninja-build \
-            pkg-config \
-            xvfb \
-            libcurl4-openssl-dev \
-            libglfw3-dev \
-            libuv1-dev \
-            g++-10 \
-            libc++-9-dev \
-            libc++abi-9-dev \
-            libjpeg-dev \
-            libpng-dev \
-            libwebp-dev
-          /usr/sbin/update-ccache-symlinks
-
-      - name: install dependencies
-        run: npm ci
-
-      - name: build
-        run: npm run build
-
-      - name: build only for dependencies
-        run: |
-          rm -rf node_modules
-          npm install --omit=dev
-          mv node_modules/ ./build/.
-          mv package.json ./build/package.json
-
-      - name: 'Deploy to Azure Web App for undpgeohub-static-image-api'
-        if: ${{ github.ref == 'refs/heads/main'}}
-        id: deploy-to-webapp
-        uses: azure/webapps-deploy@v2
+      - name: Log into ACR
+        uses: docker/login-action@v2
         with:
-          app-name: 'undpgeohub-static-image-api'
-          slot-name: 'Production'
-          publish-profile: ${{ secrets.GEOHUB_STATIC_IMAGE_API_APPSERVICE_SECRET }}
-          package: ./build
+          registry: ${{ secrets.ACR_ENDPOINT }}
+          username: ${{ secrets.ACR_USERNAME }}
+          password: ${{ secrets.ACR_PASSWORD }}
+
+      - name: Extract Docker metadata
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          images: ${{ secrets.ACR_ENDPOINT }}/${{ env.IMAGE_NAME }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          context: .
+          # push: ${{ github.ref == 'refs/heads/main'}}
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}

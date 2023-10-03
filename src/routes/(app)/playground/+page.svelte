@@ -26,7 +26,7 @@
 	let zoom: number = 3;
 	let bearing: number = 0;
 	let pitch: number = 0;
-	let isRetina = false
+	let isRetina = false;
 
 	let mapContainer: HTMLDivElement;
 	let previewContainer: HTMLDivElement;
@@ -126,19 +126,23 @@
 	};
 
 	const computeBoundsFromCenter = async () => {
-		const res = await fetch(`${origin}/api/bounds/${longitude},${latitude},${zoom}/${width}x${height}`);
+		const res = await fetch(
+			`${origin}/api/bounds/${longitude},${latitude},${zoom}/${width}x${height}`
+		);
 		const json = await res.json();
 		return json.bounds;
 	};
 
 	$: activeTab, updateApiUrl();
-	$: isRetina, updateApiUrl()
+	$: isRetina, updateApiUrl();
 	const updateApiUrl = () => {
-		let retina = isRetina?'@2x':''
+		let retina = isRetina ? '@2x' : '';
 		if (activeTab === 'center') {
 			apiUrl = `${origin}/api/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.png${retina}?url=${styleUrl}`;
 		} else if (activeTab === 'bbox') {
-			apiUrl = `${origin}/api/style/static/${bbox.join(',')}/${width}x${height}.png${retina}?url=${styleUrl}`;
+			apiUrl = `${origin}/api/style/static/${bbox.join(
+				','
+			)}/${width}x${height}.png${retina}?url=${styleUrl}`;
 		} else {
 			if (styleJSON.center) {
 				longitude = styleJSON.center[0];
@@ -299,12 +303,11 @@
 					<label class="label">High resolution</label>
 					<div class="control">
 						<label class="checkbox">
-							<input type="checkbox" bind:checked={isRetina}>
-							 @2x
-						  </label>
+							<input type="checkbox" bind:checked={isRetina} />
+							@2x
+						</label>
 					</div>
 				</div>
-
 			</div>
 		</div>
 	</div>
@@ -337,7 +340,7 @@
 		.map {
 			position: relative;
 			width: 100%;
-			height: 500px;
+			height: 70vh;
 		}
 
 		.preview {

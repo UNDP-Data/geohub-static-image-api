@@ -12,33 +12,22 @@
 		},
 		{
 			id: 'header-link-geohub',
-			title: 'GeoHub',
-			href: 'https://geohub.data.undp.org'
-		},
-		{
-			id: 'header-link-geohub',
-			title: 'GeoHub dev',
-			href: 'https://dev.undpgeohub.org'
+			title: 'API Spec',
+			href: '/api'
 		}
 	];
 
 	let footerItems: {
 		[key: string]: FooterItem[];
 	} = {
-		GeoHub: [
+		'Static Image API': [
 			{
-				title: 'GeoHub',
-				url: 'https://geohub.data.undp.org'
+				title: 'Home',
+				url: '/'
 			},
 			{
-				title: 'GeoHub dev',
-				url: 'https://dev.undpgeohub.org'
-			}
-		],
-		APIs: [
-			{
-				title: 'Static Image API',
-				url: '/'
+				title: 'API Spec',
+				url: '/api'
 			}
 		]
 	};

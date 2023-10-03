@@ -34,6 +34,8 @@ RUN npm ci
 
 COPY . /app/.
 
+RUN npm run build
+
 RUN ./scripts/build.sh
 
 RUN cp entrypoint.sh ./build/.

@@ -23,8 +23,7 @@ RUN apt-get install -y \
     libgles2-mesa-dev \
     libgbm-dev  \
     xvfb \
-    x11-utils \
-    wget
+    x11-utils
 
 RUN dpkgArch="$(dpkg --print-architecture)" && \
   # install deps required by maplibre-gl-native but not available on bullseye
@@ -59,7 +58,21 @@ RUN cp entrypoint.sh ./build/.
 FROM node:18-bullseye
 
 RUN apt update
-RUN apt install -y tzdata xvfb libopengl-dev libuv1-dev
+RUN apt install -y \
+    libcurl4-openssl-dev \
+    libglfw3-dev \
+    libuv1-dev \
+    libjpeg62-turbo \
+    libpng-dev \
+    libwebp-dev \
+    libicu-dev \
+    libcairo2-dev \
+    libgles2-mesa-dev \
+    libgbm-dev \
+    tzdata \
+    xvfb \
+    libopengl-dev \
+    libuv1-dev
 RUN dpkgArch="$(dpkg --print-architecture)" && \
   # install deps required by maplibre-gl-native but not available on bullseye
   wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.deb && \

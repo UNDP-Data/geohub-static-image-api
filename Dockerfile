@@ -23,7 +23,8 @@ RUN apt-get install -y \
     libgles2-mesa-dev \
     libgbm-dev  \
     xvfb \
-    x11-utils
+    x11-utils \
+    wget
 
 RUN ARCH= && dpkgArch="$(dpkg --print-architecture)" \
   && case "${dpkgArch##*-}" in \

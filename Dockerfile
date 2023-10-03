@@ -66,6 +66,6 @@ COPY --from=build /app/build /app
 RUN npm i -g pm2
 
 ENV DISPLAY=:99
-EXPOSE 3000
+EXPOSE 80
 
 ENTRYPOINT [ "/app/entrypoint.sh" ]

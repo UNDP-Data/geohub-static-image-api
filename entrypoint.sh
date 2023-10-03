@@ -12,7 +12,7 @@ done
 echo "Xvfb is running"
 
 echo "Starting mbgl-renderer server"
-NODE_PORT=80 pm2 start index.js -i 4 &
+pm2 start index.js -i 4 &
 echo "Hit Ctrl-C to exit"
 
 trap "echo 'Stopping'; kill -s TERM $Xvfb_pid" INT TERM

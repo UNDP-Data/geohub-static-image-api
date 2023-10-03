@@ -1,7 +1,7 @@
 import mbgl from '@maplibre/maplibre-gl-native';
 import sharp from 'sharp';
 import request from 'request';
-import * as pmtiles from 'pmtiles';
+import pmtiles from 'pmtiles';
 import type { StyleSpecification } from 'maplibre-gl';
 
 export const renderMap = async (

@@ -22,7 +22,10 @@ RUN apt-get install -y \
     libcairo2-dev \
     libgles2-mesa-dev \
     libgbm-dev  \
+    tzdata \
     xvfb \
+    libopengl-dev \
+    libuv1-dev \
     x11-utils \
     wget
 

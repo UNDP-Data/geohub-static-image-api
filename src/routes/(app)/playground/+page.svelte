@@ -74,7 +74,7 @@
 		map.addControl(new NavigationControl(), 'bottom-right');
 		map.addControl(new ScaleControl({ unit: 'metric' }), 'bottom-left');
 
-		map.on('load', function () {
+		map.on('load', () => {
 			map.resize();
 		});
 
@@ -112,15 +112,15 @@
 
 	const handleMoveend = async () => {
 		if (!map) return;
+		if (activeTab === 'auto') return;
 		const center = map.getCenter();
 		longitude = center.lng;
 		latitude = center.lat;
 		zoom = map.getZoom();
-
-		bbox = await computeBoundsFromCenter();
-
 		bearing = map.getBearing();
 		pitch = map.getPitch();
+		bbox = await computeBoundsFromCenter();
+
 		updateApiUrl();
 	};
 

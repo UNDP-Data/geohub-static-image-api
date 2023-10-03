@@ -32,6 +32,7 @@ RUN apt-get install -y \
     xvfb \
     x11-utils
 
+RUN dpkgArch="$(dpkg --print-architecture)"
 RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20190501T215844Z/pool/main/g/glibc/multiarch-support_2.28-10_$dpkgArch.debian
 RUN apt install ./multiarch-support_2.28-10_$dpkgArch.deb 
 RUN wget --no-verbose http://snapshot.debian.org/archive/debian/20141009T042436Z/pool/main/libj/libjpeg8/libjpeg8_8d1-2_$dpkgArch.deb

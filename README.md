@@ -1,25 +1,6 @@
 # geohub-static-image-api
 
-## Run locally by swa CLI
-
-```shell
-npm run build
-npm run swa:start
-```
-
-see [here](https://github.com/geoffrich/svelte-adapter-azure-swa#running-locally-with-the-azure-swa-cli) more details about static web app adapter.
-
-## Run locally by vite
-
-```shell
-npm run dev
-```
-
-## Deploy
-
-```shell
-npm run swa:deploy
-```
+This repository is to manage the code for static image API in GeoHub.
 
 ## create-svelte
 

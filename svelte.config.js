@@ -15,7 +15,10 @@ const config = {
 			out: 'build',
 			precompress: false,
 			envPrefix: ''
-		})
+		}),
+		csrf: {
+			checkOrigin: false
+		}
 	}
 };
 

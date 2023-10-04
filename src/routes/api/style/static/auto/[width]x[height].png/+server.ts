@@ -24,7 +24,26 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	}
 
 	const image = await renderMapAuto(width, height, ratio, style, url);
+	return new Response(image, {
+		headers: {
+			'Content-type': 'image/png'
+		}
+	});
+};
 
+export const POST: RequestHandler = async ({ params, url, request }) => {
+	const width = Number(params.width);
+	const height = Number(params.height);
+	const ratio = 1;
+
+	const style: StyleSpecification = await request.json();
+
+	const errors = validateStyle(style);
+	if (errors.length) {
+		throw error(400, { message: errors.join(', ') });
+	}
+
+	const image = await renderMapAuto(width, height, ratio, style, url);
 	return new Response(image, {
 		headers: {
 			'Content-type': 'image/png'

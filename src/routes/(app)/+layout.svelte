@@ -5,7 +5,6 @@
 	import { Footer, Header, type HeaderLink } from '@undp-data/svelte-undp-design';
 
 	let title = $page.data.title ?? 'GeoHub Static Image API';
-	let content = $page.data.content ?? 'GeoHub Static Image API';
 	let site_name = $page.data.site_name ?? 'GeoHub Static Image API';
 	let site_description =
 		$page.data.site_description ??
@@ -13,7 +12,6 @@
 
 	afterNavigate(() => {
 		title = $page.data.title ?? 'GeoHub Static Image API';
-		content = $page.data.content ?? 'GeoHub Static Image API';
 		site_name = $page.data.site_name ?? 'GeoHub Static Image API';
 		site_description =
 			$page.data.site_description ??

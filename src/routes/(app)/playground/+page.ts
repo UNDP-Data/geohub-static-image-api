@@ -1,12 +1,10 @@
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {
-	const title = 'Playground | Static API';
-	const content = 'GeoHub Static API Playground';
+	const title = 'Playground | GeoHub Static API';
 
 	return {
-		title,
-		content
+		title
 	};
 };
 

@@ -21,11 +21,11 @@
 	let width = 300;
 	let height = 200;
 	let bbox: [number, number, number, number];
-	let latitude: number = 0;
-	let longitude: number = 0;
-	let zoom: number = 3;
-	let bearing: number = 0;
-	let pitch: number = 0;
+	let latitude = 0;
+	let longitude = 0;
+	let zoom = 3;
+	let bearing = 0;
+	let pitch = 0;
 	let isRetina = false;
 
 	let mapContainer: HTMLDivElement;

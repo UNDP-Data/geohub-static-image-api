@@ -2,7 +2,20 @@ import mbgl from '@maplibre/maplibre-gl-native';
 import sharp from 'sharp';
 import request from 'request';
 import pmtiles from 'pmtiles';
+import Color from 'color';
+import url from 'url';
+import path from 'path';
 import type { StyleSpecification } from 'maplibre-gl';
+
+/**
+ * Lookup of sharp output formats by file extension.
+ */
+const extensionToFormat = {
+	'.jpg': 'jpeg',
+	'.jpeg': 'jpeg',
+	'.png': 'png',
+	'.webp': 'webp'
+};
 
 export const renderMap = async (
 	url: URL,
@@ -81,15 +94,73 @@ const render = (
 	});
 };
 
-const getRemoteSource = (url: string, callback) => {
+/**
+ * Cache of response data by sharp output format and color.  Entry for empty
+ * string is for unknown or unsupported formats.
+ */
+const cachedEmptyResponses: { [key: string]: Buffer } = {
+	'': Buffer.alloc(0)
+};
+
+/**
+ * Create an appropriate mlgl response for http errors.
+ * @param {string} format The format (a sharp format or 'pbf').
+ * @param {string} color The background color (or empty string for transparent).
+ * @param {Function} callback The mlgl callback.
+ */
+function createEmptyResponse(format: string, color: string, callback) {
+	if (!format || format === 'pbf') {
+		callback(null, { data: cachedEmptyResponses[''] });
+		return;
+	}
+
+	if (format === 'jpg') {
+		format = 'jpeg';
+	}
+	if (!color) {
+		color = 'rgba(255,255,255,0)';
+	}
+
+	const cacheKey = `${format},${color}`;
+	const data = cachedEmptyResponses[cacheKey];
+	if (data) {
+		callback(null, { data: data });
+		return;
+	}
+
+	// create an "empty" response image
+	const colorObj = new Color(color);
+	const array = colorObj.array();
+	const channels = array.length === 4 && format !== 'jpeg' ? 4 : 3;
+	sharp(Buffer.from(array), {
+		raw: {
+			width: 1,
+			height: 1,
+			channels: channels
+		}
+	})
+		.toFormat(format)
+		.toBuffer((err, buffer) => {
+			if (!err) {
+				cachedEmptyResponses[cacheKey] = buffer;
+			}
+			callback(null, { data: buffer });
+		});
+}
+
+const getRemoteSource = (sourceUrl: string, callback) => {
 	request(
 		{
-			url: url,
+			url: sourceUrl,
 			encoding: null,
 			gzip: true
 		},
 		(err, res, body) => {
+			const parts = url.parse(sourceUrl);
+			const extension = path.extname(parts.pathname).toLowerCase();
+			const format = extensionToFormat[extension] || '';
 			if (err || res.statusCode < 200 || res.statusCode >= 300) {
+				createEmptyResponse(format, '', callback);
 				return null;
 			}
 
@@ -111,8 +182,8 @@ const getRemoteSource = (url: string, callback) => {
 	);
 };
 
-const getPMTilesSource = async (url: string, callback) => {
-	const pmtileUrl = url.replace('pmtiles://', '');
+const getPMTilesSource = async (sourceUrl: string, callback) => {
+	const pmtileUrl = sourceUrl.replace('pmtiles://', '');
 	const p = new pmtiles.PMTiles(`${pmtileUrl}`);
 	const header = await p.getHeader();
 	const _url = new URL(pmtileUrl);
@@ -128,11 +199,11 @@ const getPMTilesSource = async (url: string, callback) => {
 	callback(null, { data: Buffer.from(JSON.stringify(tileJSON)) });
 };
 
-const getPMTilesTile = async (url: string, callback) => {
+const getPMTilesTile = async (sourceUrl: string, callback) => {
 	const TILE_REGEXP = RegExp('(\\d+)/(\\d+)/(\\d+)');
-	const matches = url.match(TILE_REGEXP);
+	const matches = sourceUrl.match(TILE_REGEXP);
 	const [z, x, y] = matches.slice(matches.length - 3, matches.length);
-	const pmtilesUrl = `${url.replace('pmtiles://', '').replace(`/${z}/${x}/${y}`, '')}`;
+	const pmtilesUrl = `${sourceUrl.replace('pmtiles://', '').replace(`/${z}/${x}/${y}`, '')}`;
 	const p = new pmtiles.PMTiles(pmtilesUrl);
 	const data = await p.getZxy(Number(z), Number(x), Number(y));
 

@@ -3,6 +3,7 @@ import type { StyleSpecification } from 'maplibre-gl';
 import { renderMapByCenterZoom } from '$lib/server/renderMapByCenterZoom';
 import { validateStyle } from '$lib/server/validateStyle';
 import { error } from '@sveltejs/kit';
+import type { extensionFormat } from '$lib/server/renderMap';
 
 export const GET: RequestHandler = async ({ params, url }) => {
 	const lon = Number(params.lon);
@@ -12,7 +13,14 @@ export const GET: RequestHandler = async ({ params, url }) => {
 	const pitch = Number(params.pitch);
 	const width = Number(params.width);
 	const height = Number(params.height);
-	const ratio = 1;
+	const ratio = url.searchParams.get('ratio') ? Number(url.searchParams.get('ratio')) : 1;
+	if (!(ratio === 1 || ratio === 2)) {
+		throw error(400, 'ratio should be either 1 or 2.');
+	}
+	const format = params.format as extensionFormat;
+	if (!['jpeg', 'png', 'webp'].includes(format)) {
+		throw error(400, 'Unsupported format.');
+	}
 
 	const styleUrl = url.searchParams.get('url');
 
@@ -37,13 +45,14 @@ export const GET: RequestHandler = async ({ params, url }) => {
 		width,
 		height,
 		ratio,
+		format,
 		style,
 		url
 	);
 
 	return new Response(image, {
 		headers: {
-			'Content-type': 'image/png'
+			'Content-type': `image/${format}`
 		}
 	});
 };
@@ -56,7 +65,14 @@ export const POST: RequestHandler = async ({ params, url, request }) => {
 	const pitch = Number(params.pitch);
 	const width = Number(params.width);
 	const height = Number(params.height);
-	const ratio = 1;
+	const ratio = url.searchParams.get('ratio') ? Number(url.searchParams.get('ratio')) : 1;
+	if (!(ratio === 1 || ratio === 2)) {
+		throw error(400, 'ratio should be either 1 or 2.');
+	}
+	const format = params.format as extensionFormat;
+	if (!['jpeg', 'png', 'webp'].includes(format)) {
+		throw error(400, 'Unsupported format.');
+	}
 
 	const style: StyleSpecification = await request.json();
 
@@ -74,13 +90,14 @@ export const POST: RequestHandler = async ({ params, url, request }) => {
 		width,
 		height,
 		ratio,
+		format,
 		style,
 		url
 	);
 
 	return new Response(image, {
 		headers: {
-			'Content-type': 'image/png'
+			'Content-type': `image/${format}`
 		}
 	});
 };

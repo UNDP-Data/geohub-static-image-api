@@ -1,5 +1,5 @@
 import type { RenderOptions } from '@maplibre/maplibre-gl-native';
-import { renderMap } from '$lib/server/renderMap';
+import { renderMap, type extensionFormat } from '$lib/server/renderMap';
 import geoViewport from '@mapbox/geo-viewport';
 import type { StyleSpecification } from 'maplibre-gl';
 
@@ -8,6 +8,7 @@ export const renderMapByBBOX = async (
 	width: number,
 	height: number,
 	ratio: number,
+	format: extensionFormat,
 	style: StyleSpecification,
 	url: URL
 ) => {
@@ -32,7 +33,7 @@ export const renderMapByBBOX = async (
 		center: center
 	};
 
-	const image = await renderMap(url, style, mapOptions, width, height, ratio);
+	const image = await renderMap(url, style, mapOptions, width, height, ratio, format);
 
 	return image;
 };

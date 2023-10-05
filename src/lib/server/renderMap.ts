@@ -7,6 +7,8 @@ import url from 'url';
 import path from 'path';
 import type { StyleSpecification } from 'maplibre-gl';
 
+export type extensionFormat = 'jpeg' | 'png' | 'webp';
+
 /**
  * Lookup of sharp output formats by file extension.
  */
@@ -23,7 +25,8 @@ export const renderMap = async (
 	mapOptions: mbgl.RenderOptions,
 	width: number,
 	height: number,
-	ratio: number
+	ratio: number,
+	format: extensionFormat
 ) => {
 	const map = new mbgl.Map({
 		request: (req, callback) => {
@@ -63,7 +66,7 @@ export const renderMap = async (
 		channels: 4
 	};
 
-	const image = await render(map, mapOptions, sharpOptions, ratio);
+	const image = await render(map, mapOptions, sharpOptions, ratio, format);
 	return image;
 };
 
@@ -71,7 +74,8 @@ const render = (
 	map: mbgl.Map,
 	mapOptions: mbgl.RenderOptions,
 	sharpOptions: sharp.CreateRaw,
-	ratio: number
+	ratio: number,
+	format: extensionFormat
 ) => {
 	return new Promise<Buffer>((resolve, reject) => {
 		map.render(mapOptions, (err, buffer) => {
@@ -84,12 +88,28 @@ const render = (
 				options.height = options.height * ratio;
 			}
 
-			const image = sharp(buffer, {
-				raw: options
-			})
-				.png()
-				.toBuffer();
-			resolve(image);
+			if (format === 'jpeg') {
+				const image = sharp(buffer, {
+					raw: options
+				})
+					.jpeg()
+					.toBuffer();
+				resolve(image);
+			} else if (format === 'png') {
+				const image = sharp(buffer, {
+					raw: options
+				})
+					.png()
+					.toBuffer();
+				resolve(image);
+			} else if (format === 'webp') {
+				const image = sharp(buffer, {
+					raw: options
+				})
+					.webp()
+					.toBuffer();
+				resolve(image);
+			}
 		});
 	});
 };

@@ -28,6 +28,9 @@
 	let pitch = 0;
 	let isRetina = false;
 
+	let supportedExtensions = ['jpeg', 'png', 'webp'];
+	let extension = 'png';
+
 	let mapContainer: HTMLDivElement;
 	let previewContainer: HTMLDivElement;
 	let activeTab: 'center' | 'bbox' | 'auto' = 'center';
@@ -135,14 +138,15 @@
 
 	$: activeTab, updateApiUrl();
 	$: isRetina, updateApiUrl();
+	$: extension, updateApiUrl();
 	const updateApiUrl = () => {
-		let retina = isRetina ? '@2x' : '';
+		let retina = isRetina ? '&ratio=2' : '';
 		if (activeTab === 'center') {
-			apiUrl = `${origin}/api/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.png${retina}?url=${styleUrl}`;
+			apiUrl = `${origin}/api/style/static/${longitude},${latitude},${zoom},${bearing},${pitch}/${width}x${height}.${extension}?url=${styleUrl}${retina}`;
 		} else if (activeTab === 'bbox') {
 			apiUrl = `${origin}/api/style/static/${bbox.join(
 				','
-			)}/${width}x${height}.png${retina}?url=${styleUrl}`;
+			)}/${width}x${height}.${extension}?url=${styleUrl}${retina}`;
 		} else {
 			if (styleJSON.center) {
 				longitude = styleJSON.center[0];
@@ -160,7 +164,7 @@
 			map.setBearing(bearing);
 			map.setPitch(bearing);
 
-			apiUrl = `${origin}/api/style/static/auto/${width}x${height}.png${retina}?url=${styleUrl}`;
+			apiUrl = `${origin}/api/style/static/auto/${width}x${height}.${extension}?url=${styleUrl}${retina}`;
 		}
 	};
 </script>
@@ -306,6 +310,21 @@
 							<input type="checkbox" bind:checked={isRetina} />
 							@2x
 						</label>
+					</div>
+				</div>
+
+				<div class="field">
+					<!-- svelte-ignore a11y-label-has-associated-control -->
+					<label class="label">File extension</label>
+					<div class="control">
+						<div class="buttons has-addons is-left">
+							{#each supportedExtensions as ext}
+								<button
+									class="button {extension === ext ? 'is-primary' : 'is-primary is-light'}"
+									on:click={() => (extension = ext)}>{ext}</button
+								>
+							{/each}
+						</div>
 					</div>
 				</div>
 			</div>

@@ -45,11 +45,12 @@ paths:
                       - 80.17871349622823
       operationId: 'get-bounds-lon-,-lat-,-zoom-width-x-height'
       description: Get bounds from center and zoom
-  '/style/static/{bbox}/{width}x{height}.png':
+  '/style/static/{bbox}/{width}x{height}.{format}':
     parameters:
       - $ref: '#/components/parameters/bbox'
       - $ref: '#/components/parameters/width'
       - $ref: '#/components/parameters/height'
+      - $ref: '#/components/parameters/format'
     get:
       summary: Static image by bbox
       responses:
@@ -61,6 +62,7 @@ paths:
       description: get static image by BBOX
       parameters:
         - $ref: '#/components/parameters/url'
+        - $ref: '#/components/parameters/ratio'
       tags:
         - bbox
     post:
@@ -76,38 +78,9 @@ paths:
         $ref: '#/components/requestBodies/stylejson'
       tags:
         - bbox
-  '/style/static/{bbox}/{width}x{height}.png@2x':
-    parameters:
-      - $ref: '#/components/parameters/bbox'
-      - $ref: '#/components/parameters/width'
-      - $ref: '#/components/parameters/height'
-    get:
-      summary: Static image @2x by bbox
-      responses:
-        '200':
-          $ref: '#/components/responses/200-style'
-        '400':
-          $ref: '#/components/responses/400-style-get'
-      operationId: get-style-static-bbox-width-x-height-.png
-      description: get static image @2x by BBOX
       parameters:
-        - $ref: '#/components/parameters/url'
-      tags:
-        - bbox
-    post:
-      summary: Static image @2x by bbox
-      operationId: post-style-static-bbox-width-x-height-.png@2x
-      responses:
-        '200':
-          $ref: '#/components/responses/200-style'
-        '400':
-          $ref: '#/components/responses/400-style-post'
-      description: get static image by BBOX
-      requestBody:
-        $ref: '#/components/requestBodies/stylejson'
-      tags:
-        - bbox
-  '/style/static/{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}.png':
+        - $ref: '#/components/parameters/ratio'
+  '/style/static/{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}.{format}':
     parameters:
       - $ref: '#/components/parameters/lon'
       - $ref: '#/components/parameters/lat'
@@ -116,6 +89,7 @@ paths:
       - $ref: '#/components/parameters/pitch'
       - $ref: '#/components/parameters/width'
       - $ref: '#/components/parameters/height'
+      - $ref: '#/components/parameters/format'
     get:
       summary: Static image by center and zoom
       responses:
@@ -126,6 +100,7 @@ paths:
       operationId: 'get-style-static-lon-,-lat-,-zoom-,-bearing-,-pitch-width-x-height-.png'
       parameters:
         - $ref: '#/components/parameters/url'
+        - $ref: '#/components/parameters/ratio'
       description: get static image by center and zoom
       tags:
         - center zoom
@@ -142,57 +117,13 @@ paths:
       description: get static image by center and zoom
       tags:
         - center zoom
-  '/style/static/{lon},{lat},{zoom},{bearing},{pitch}/{width}x{height}.png@2x':
+      parameters:
+        - $ref: '#/components/parameters/ratio'
+  '/style/static/auto/{width}x{height}.{format}':
     parameters:
-      - $ref: '#/components/parameters/lon'
-      - $ref: '#/components/parameters/lat'
-      - $ref: '#/components/parameters/zoom'
-      - $ref: '#/components/parameters/bearing'
-      - $ref: '#/components/parameters/pitch'
       - $ref: '#/components/parameters/width'
       - $ref: '#/components/parameters/height'
-    get:
-      summary: Static image @2x by center and zoom
-      responses:
-        '200':
-          $ref: '#/components/responses/200-style'
-        '400':
-          $ref: '#/components/responses/400-style-get'
-      operationId: 'get-style-static-lon-,-lat-,-zoom-,-bearing-,-pitch-width-x-height-.png'
-      parameters:
-        - $ref: '#/components/parameters/url'
-      description: get static image @2x by center and zoom
-      tags:
-        - center zoom
-    post:
-      summary: Static image @2x by center and zoom
-      operationId: 'post-style-static-lon-,-lat-,-zoom-,-bearing-,-pitch-width-x-height-.png@2x'
-      responses:
-        '200':
-          $ref: '#/components/responses/200-style'
-        '400':
-          $ref: '#/components/responses/400-style-post'
-      requestBody:
-        $ref: '#/components/requestBodies/stylejson'
-      description: get static image @2x by center and zoom
-      tags:
-        - center zoom
-  '/style/static/auto/{width}x{height}.png':
-    parameters:
-      - name: width
-        in: path
-        required: true
-        schema:
-          type: integer
-          default: 300
-        description: image width (pixel)
-      - name: height
-        in: path
-        required: true
-        schema:
-          type: number
-          default: 200
-        description: image height (pixel)
+      - $ref: '#/components/parameters/format'
     get:
       summary: Static image with default location
       responses:
@@ -204,6 +135,7 @@ paths:
       description: get static image by default location in style.json automatically
       parameters:
         - $ref: '#/components/parameters/url'
+        - $ref: '#/components/parameters/ratio'
       tags:
         - auto
     post:
@@ -219,48 +151,8 @@ paths:
       description: get static image by default location in style.json automatically
       tags:
         - auto
-  '/style/static/auto/{width}x{height}.png@2x':
-    parameters:
-      - name: width
-        in: path
-        required: true
-        schema:
-          type: integer
-          default: 300
-        description: image width (pixel)
-      - name: height
-        in: path
-        required: true
-        schema:
-          type: number
-          default: 200
-        description: image height (pixel)
-    get:
-      summary: Static image @2x with default location
-      responses:
-        '200':
-          $ref: '#/components/responses/200-style'
-        '400':
-          $ref: '#/components/responses/400-style-get'
-      operationId: get-style-static-auto-width-x-height-.png
-      description: get static image @2x by default location in style.json automatically
       parameters:
-        - $ref: '#/components/parameters/url'
-      tags:
-        - auto
-    post:
-      summary: Static image @2x with default location
-      operationId: post-style-static-auto-width-x-height-.png@2x
-      responses:
-        '200':
-          $ref: '#/components/responses/200-style'
-        '400':
-          $ref: '#/components/responses/400-style-post'
-      requestBody:
-        $ref: '#/components/requestBodies/stylejson'
-      description: get static image @2x by default location in style.json automatically
-      tags:
-        - auto
+        - $ref: '#/components/parameters/ratio'
 components:
   schemas: {}
   parameters:
@@ -345,6 +237,29 @@ components:
         type: string
         example: '@2x'
       description: '@2x'
+    format:
+      name: format
+      in: path
+      required: true
+      schema:
+        type: string
+        default: png
+        enum:
+          - png
+          - jpeg
+          - webp
+      description: 'Supported format (jpeg, png, webp)'
+    ratio:
+      name: ratio
+      in: query
+      required: false
+      schema:
+        type: integer
+        enum:
+          - 1
+          - 2
+        default: 1
+      description: ratio. either 1 or 2. Default is 1
   examples: {}
   requestBodies:
     stylejson:

@@ -28,6 +28,21 @@ export const renderMap = async (
 	ratio: number,
 	format: extensionFormat
 ) => {
+	console.info(`renderMap: start`);
+	console.debug(`Map parameters=style.name:${style.name}; layers: ${style.layers.length}`);
+	console.info(`Map sources: `);
+	Object.keys(style.sources).forEach((key) => {
+		const src = style.sources[key];
+		if ('url' in src) {
+			console.debug(`- ${src.url}`);
+		}
+		if ('tiles' in src && src.tiles) {
+			console.debug(`- ${src.tiles[0]}`);
+		}
+	});
+	console.debug(
+		`Image parameters=width: ${width}; height: ${height}; ratio: ${ratio}; format: ${format}`
+	);
 	const map = new mbgl.Map({
 		request: (req, callback) => {
 			let apiUrl = req.url;
@@ -59,6 +74,7 @@ export const renderMap = async (
 		ratio: ratio
 	});
 	map.load(style);
+	console.info(`renderMap: loaded style`);
 
 	const sharpOptions: sharp.CreateRaw = {
 		width: width,
@@ -67,6 +83,7 @@ export const renderMap = async (
 	};
 
 	const image = await render(map, mapOptions, sharpOptions, ratio, format);
+	console.info(`renderMap: end`);
 	return image;
 };
 
@@ -88,25 +105,15 @@ const render = (
 				options.height = options.height * ratio;
 			}
 
-			if (format === 'jpeg') {
+			if (!buffer) {
+				const msg = 'Buffer is null. Invalid source.';
+				console.error(msg);
+				reject(msg);
+			} else {
 				const image = sharp(buffer, {
 					raw: options
 				})
-					.jpeg()
-					.toBuffer();
-				resolve(image);
-			} else if (format === 'png') {
-				const image = sharp(buffer, {
-					raw: options
-				})
-					.png()
-					.toBuffer();
-				resolve(image);
-			} else if (format === 'webp') {
-				const image = sharp(buffer, {
-					raw: options
-				})
-					.webp()
+					.toFormat(format)
 					.toBuffer();
 				resolve(image);
 			}

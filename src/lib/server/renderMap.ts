@@ -26,7 +26,8 @@ export const renderMap = async (
 	width: number,
 	height: number,
 	ratio: number,
-	format: extensionFormat
+	format: extensionFormat,
+	images?: sharp.OverlayOptions[]
 ) => {
 	console.info(`renderMap: start`);
 	console.debug(`Map parameters=style.name:${style.name}; layers: ${style.layers.length}`);
@@ -82,7 +83,7 @@ export const renderMap = async (
 		channels: 4
 	};
 
-	const image = await render(map, mapOptions, sharpOptions, ratio, format);
+	const image = await render(map, mapOptions, sharpOptions, ratio, format, images);
 	console.info(`renderMap: end`);
 	return image;
 };
@@ -92,7 +93,8 @@ const render = (
 	mapOptions: mbgl.RenderOptions,
 	sharpOptions: sharp.CreateRaw,
 	ratio: number,
-	format: extensionFormat
+	format: extensionFormat,
+	images?: sharp.OverlayOptions[]
 ) => {
 	return new Promise<Buffer>((resolve, reject) => {
 		map.render(mapOptions, (err, buffer) => {
@@ -110,12 +112,22 @@ const render = (
 				console.error(msg);
 				reject(msg);
 			} else {
-				const image = sharp(buffer, {
-					raw: options
-				})
-					.toFormat(format)
-					.toBuffer();
-				resolve(image);
+				if (images) {
+					const image = sharp(buffer, {
+						raw: options
+					})
+						.composite(images)
+						.toFormat(format)
+						.toBuffer();
+					resolve(image);
+				} else {
+					const image = sharp(buffer, {
+						raw: options
+					})
+						.toFormat(format)
+						.toBuffer();
+					resolve(image);
+				}
 			}
 		});
 	});

@@ -153,6 +153,24 @@ paths:
         - auto
       parameters:
         - $ref: '#/components/parameters/ratio'
+  /og:
+    get:
+      summary: Generate a OG image
+      tags:
+        - og
+      responses:
+        '200':
+          $ref: '#/components/responses/200-style'
+      operationId: get-og
+      parameters:
+        - $ref: '#/components/parameters/url'
+        - schema:
+            type: string
+          in: query
+          name: content
+          description: Content for og image
+          required: true
+      description: Generate a OG image by givern style.json and content text
 components:
   schemas: {}
   parameters:

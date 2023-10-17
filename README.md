@@ -1,3 +1,5 @@
+# !! This repository was moved to [undp-data/geohub](https://github.com/UNDP-Data/geohub/tree/develop/sites/static-image-api) repo
+
 # geohub-static-image-api
 
 This repository is to manage the code for static image API in GeoHub.
